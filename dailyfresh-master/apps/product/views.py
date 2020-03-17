@@ -161,3 +161,7 @@ class List(View):
             'cart_count': cart_count,
         }
         return render(request, 'products/list.html', context)
+
+
+def test():
+    pass
