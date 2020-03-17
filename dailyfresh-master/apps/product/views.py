@@ -162,6 +162,3 @@ class List(View):
         }
         return render(request, 'products/list.html', context)
 
-
-def test():
-    pass
