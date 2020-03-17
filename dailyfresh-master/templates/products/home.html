@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+    主页
+{% endblock %}
+{% block header %}
+
+    <div class="header_con">
+    <div class="header">
+        <div class="welcome fl">欢迎来到天天生鲜!</div>
+        <div class="fr">
+			{# 不用转可以直接在模板使用 #}
+            {% if user.is_authenticated%}
+             <div class="user_link fl">
+                <a href="{% url 'user:userinfo'%}">欢迎您：{{user.username}}</a>
+                <span>|</span>
+                 <a href="{% url 'user:logout' %}">退出</a>
+                <span>|</span>
+                <a href="{% url 'user:userinfo' %}">用户中心</a>
+                <span>|</span>
+                <a href="{% url 'cart:cart' %}">我的购物车</a>
+                <span>|</span>
+                <a href="{% url 'user:userorder' 1 %}">我的订单</a>
+            </div>
+            {% else %}
+            <div class="login_btn fl">
+                <a href="{% url 'user:login' %}">登录</a>
+                <span>|</span>
+                <a href="{% url 'user:register' %}">注册</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<div class="search_bar clearfix">
+    <a href="/" class="logo fl"><img src="/static/images/logo.png"></a>
+    <form method='get' action="/search/" target="_blank">
+    <div class="search_con fl">
+        <input type="text" class="input_text fl" name="q" placeholder="搜索商品">
+        <input type="submit" class="input_btn fr" name="" value="搜索">
+    </div>
+    </form>
+
+
+    {% if user.is_authenticated %}
+  <div class="guest_cart fr">
+        <a href="/cart/" class="cart_name fl">我的购物车</a>
+        <div class="goods_count fl" id="show_count">{{ cart_count }}</div>
+    </div>
+        {% else %}
+        <div class="guest_cart fr">
+            <a href="{% url 'cart:cart' %}" class="cart_name fl">我的购物车</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+{% block main %}
+	<div class="navbar_con">
+		<div class="navbar">
+			<h1 class="fl">全部商品分类</h1>
+			<ul class="navlist fl">
+				{# ?sort=sal是给视图传参数 #}
+				<li><a href="/?sort=sal">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="/">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="/">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="center_con clearfix">
+		<ul class="subnav fl">
+            {% for type in types %}
+			<li><a href="#model0{{ forloop.counter }}" class="{{ type.logo }}">{{ type.category_name }}</a></li>
+            {% endfor %}
+		</ul>
+		<div class="slide fl">
+			<ul class="slide_pics">
+                {% for c_img in banners %}
+				<li><img src="/media/{{ c_img.image }}" alt="幻灯片"></li>
+                {% endfor %}
+			</ul>
+			<div class="prev"></div>
+			<div class="next"></div>
+			<ul class="points"></ul>
+		</div>
+		<div class="adv fl">
+            {% for p in promotion %}
+
+			<a href="#"><img src="/media/{{ p.image }}"></a>
+<!--			<a href="#"><img src="/static/images/adv02.jpg"></a>-->
+            {% endfor %}
+		</div>
+	</div>
+	{# types是ProductCategory类 #}
+    {% for c in types %}
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model0{{ forloop.counter }}">{{ c.category_name }}</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{# c.word_show就是TypeShow类 #}
+				{%for p in c.word_show%}
+				{# |slice:'10'切片过滤 #}
+				<a href="{% url 'product:detail' p.product.id%}">{{p.product.name|slice:'10'}}...</a>
+				{%endfor%}
+			</div>
+			<a href="{% url 'product:list' c.id 1 %}" class="goods_more fr" id="fruit_more">查看更多 ></a>
+<!--			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>-->
+		</div>
+
+		<div class="goods_con clearfix">
+
+			<div class="goods_banner fl">
+				<a href="{% url 'product:list' c.id 1 %}"><img src="/media/{{ c.image }}"></a>
+			</div>
+			<ul class="goods_list fl">
+				{%for pic_p in c.pic_show%}
+				<li>
+					{# |slice:'10'切片过滤 #}
+					<h4><a href="{% url 'product:detail' pic_p.product.id%}">{{pic_p.product.name|slice:'10'}}...</a></h4>
+					<a href="{% url 'product:detail' pic_p.product.id%}"><img src="/media/{{pic_p.product.image}}"></a>
+					<div class="prize">¥{{pic_p.product.price}}</div>
+				</li>
+				{%endfor%}
+			</ul>
+		</div>
+	</div>
+    {% endfor %}
+{% endblock %}
+{% block js%}
+    <script src="{% static 'product/slide.js' %}"></script>
+    <script type="text/javascript">
+{#		BCSlideshow('focuspic');#}
+		var oFruit = document.getElementById('fruit_more');
+<!--		window.alert(oFruit);-->
+		{# id=show_count的整行元素 #}
+		var oShownum = document.getElementById('show_count');
+		{#window.alert(oShownum);#}
+		{# 获取本地order_finish的值 #}
+		var hasorder = localStorage.getItem('order_finish');
+
+		if(hasorder)
+		{
+			oShownum.innerHTML = '2';
+		}
+		oFruit.onclick = function(d){
+
+<!--			window.alert(d);-->
+<!--			console.log(d);-->
+			{# 访问product/list/5/1页面 #}
+			window.location.href = '/product/list/5/1/';
+		}
+	</script>
+{% endblock %}
