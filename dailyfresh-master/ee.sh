@@ -76,5 +76,4 @@ echo "两数之和为 : $val"
 echo "两数之和为 : $val"
 echo "两数之和为 : $val"
 echo "两数之和为 : $val"
-echo "两数之和为 : $val"
 
