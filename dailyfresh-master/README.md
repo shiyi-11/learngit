@@ -2,9 +2,9 @@
 ## 用户模块
 * 注册、登录
   > 采用Django自带的认证系统,继承了AbstractUser类，本身就包含了cookie、session操作
-  >> 基本方法使用`authenticate() login() logout() login_required()`
-  >Redis实现对session的缓存，
-  >邮件采用Django内置的send_mail()函数，采用celery实现异步请求。
+  > 基本方法使用`authenticate() login() logout() login_required()`
+  >Redis实现对session的缓存
+  >邮件采用Django内置的send_mail()函数，采用celery实现异步请求发送激活信息。
   >历史浏览记录使用Redis的list作为记录
 ## 商品模块
 * 采用MySQL数据库
