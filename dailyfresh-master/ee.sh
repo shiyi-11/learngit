@@ -72,5 +72,4 @@ echo "数组元素个数为: ${#my_array[@]}"
 val=`expr 28 / 9`
 echo "两数之和为 : $val"
 
-echo "两数之和为 : $val"
 
